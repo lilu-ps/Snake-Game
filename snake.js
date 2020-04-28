@@ -8,31 +8,11 @@ export class Snake{
         this.snakeBody = [];
         this.a = 5;
         this.prev = {x:0, y:0};
+        this.food = {x:0, y:0};
     }
 
-    getLastDirection(){
-        return this.lastDirection;
-    }
-
-
-    getSnakeElem(){
-        return this.elem;
-    }
-
-    getSnakeBody(){
-        return this.snakeBody;
-    }
-
-    getA(){
-        return this.a;
-    }
-
-    getSnakeLength(){
-        return (this.snakeLength);
-    }
-
-    setSnakeLength(newLength){
-        this.snakeLength = newLength;
+    getSnakeLength(newLength){
+        return this.snakeLength;
     }
 
     initSnakeBody(){
@@ -40,6 +20,38 @@ export class Snake{
             var dict = {x: i, y: 0};
             this.snakeBody.push(dict);
         }
+    }
+
+    drawSnake(){
+        let arr = this.snakeBody;
+        for (var i = 0; i < this.getSnakeLength(); i++){
+            this.createRect(i, arr[i].x, arr[i].y);
+    
+        }   
+    }
+
+    drawFood(){
+        this.food.x = Math.round(Math.random()*(CONSTANTS.CANVAS_WIDTH-CONSTANTS.RECT_WIDTH)/CONSTANTS.RECT_WIDTH);
+        this.food.y = Math.round(Math.random()*(CONSTANTS.CANVAS_HEIGHT-CONSTANTS.RECT_HEIGHT)/CONSTANTS.RECT_HEIGHT);
+
+        let foodRect = this.createRect('food-id', this.food.x, this.food.y);
+        foodRect.style.backgroundColor = "red";
+        foodRect.style.borderColor = "#DF868F";
+    }
+    
+    
+
+    createRect(rectId, x, y){
+        let curRect = document.createElement('div');
+    
+        curRect.setAttribute('id', rectId);
+        curRect.setAttribute('class', 'rect');
+    
+        curRect.style.left = CONSTANTS.RECT_WIDTH * x + 'px';
+        curRect.style.top = y * CONSTANTS.RECT_HEIGHT + 'px';
+    
+        document.getElementById("canvas-id").append(curRect);
+        return curRect;
     }
 
     move(elem, index){
@@ -50,6 +62,16 @@ export class Snake{
         this.prev.y = this.snakeBody[index].y;
         if (index == 0){
            this.moveSnakeHead(elem);
+           if (this.snakeBody[index].x == this.food.x && this.snakeBody[index].y == this.food.y){
+               var curFood = document.getElementById('food-id');
+               curFood.parentNode.removeChild(curFood);
+
+               this.drawFood();
+               let length = this.snakeLength;
+               this.snakeBody.push({x: this.snakeBody[length - 1].x, y: this.snakeBody[length - 1].y});
+               this.createRect(length, this.snakeBody[length].x, this.snakeBody[length].y);
+               this.snakeLength++;
+           }
         } else {
             this.snakeBody[index].x = x;
             this.snakeBody[index].y = y;
