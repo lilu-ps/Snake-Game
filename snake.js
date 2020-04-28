@@ -11,10 +11,17 @@ export class Snake{
         this.food = {x:0, y:0};
     }
 
-    getSnakeLength(newLength){
+    /*
+     * Returns snake length
+     */
+    getSnakeLength(){
         return this.snakeLength;
     }
 
+    /*
+     * Initializes array for snake body, giving every part of it
+     * default coordinates
+     */
     initSnakeBody(){
         for (var i = this.snakeLength - 1; i >= 0; i--){
             var dict = {x: i, y: 0};
@@ -22,26 +29,35 @@ export class Snake{
         }
     }
 
+    /*
+     * Draws entire snake
+     */
     drawSnake(){
         let arr = this.snakeBody;
         for (var i = 0; i < this.getSnakeLength(); i++){
-            this.createRect(i, arr[i].x, arr[i].y);
+            this._createRect(i, arr[i].x, arr[i].y);
     
         }   
     }
 
+    /*
+     * This function chooses random coordinates for food and 
+     * then draws it on canvas.
+     */
     drawFood(){
         this.food.x = Math.round(Math.random()*(CONSTANTS.CANVAS_WIDTH-CONSTANTS.RECT_WIDTH)/CONSTANTS.RECT_WIDTH);
         this.food.y = Math.round(Math.random()*(CONSTANTS.CANVAS_HEIGHT-CONSTANTS.RECT_HEIGHT)/CONSTANTS.RECT_HEIGHT);
 
-        let foodRect = this.createRect('food-id', this.food.x, this.food.y);
+        let foodRect = this._createRect('food-id', this.food.x, this.food.y);
         foodRect.style.backgroundColor = "red";
         foodRect.style.borderColor = "#DF868F";
     }
     
     
-
-    createRect(rectId, x, y){
+    /*
+     * Creates a single rect at given position (x, y) with given rectId
+     */
+    _createRect(rectId, x, y){
         let curRect = document.createElement('div');
     
         curRect.setAttribute('id', rectId);
@@ -54,6 +70,11 @@ export class Snake{
         return curRect;
     }
 
+    /*
+     * This function moves the snake: if the element is the head of the snake,
+     * moveSnakeHead function is called, if not, the current element takes place of
+     * it's previous one.
+     */
     move(elem, index){
         let x = this.prev.x;
         let y = this.prev.y;
@@ -61,16 +82,9 @@ export class Snake{
         this.prev.x = this.snakeBody[index].x;
         this.prev.y = this.snakeBody[index].y;
         if (index == 0){
-           this.moveSnakeHead(elem);
+           this._moveSnakeHead(elem);
            if (this.snakeBody[index].x == this.food.x && this.snakeBody[index].y == this.food.y){
-               var curFood = document.getElementById('food-id');
-               curFood.parentNode.removeChild(curFood);
-
-               this.drawFood();
-               let length = this.snakeLength;
-               this.snakeBody.push({x: this.snakeBody[length - 1].x, y: this.snakeBody[length - 1].y});
-               this.createRect(length, this.snakeBody[length].x, this.snakeBody[length].y);
-               this.snakeLength++;
+                this._eatAndGrow()
            }
         } else {
             this.snakeBody[index].x = x;
@@ -80,9 +94,27 @@ export class Snake{
         elem.style.top = this.snakeBody[index].y * CONSTANTS.RECT_WIDTH + 'px';
         
     }
+
+    /*
+     * If snake finds food, the said food is removed, new one is created
+     * and another rect is added to snake's tail.
+     */
+    _eatAndGrow(){
+        var curFood = document.getElementById('food-id');
+        curFood.parentNode.removeChild(curFood);
+
+        this.drawFood();
+        let length = this.snakeLength;
+        this.snakeBody.push({x: this.snakeBody[length - 1].x, y: this.snakeBody[length - 1].y});
+        this._createRect(length, this.snakeBody[length].x, this.snakeBody[length].y);
+        this.snakeLength++;
+    }
  
 
-    moveSnakeHead(elem){
+    /*
+     * Checks what the previos direction was for the snake and acts according to that.
+     */
+    _moveSnakeHead(elem){
         switch(this.lastDirection){
             case CONSTANTS.RIGHT_DIRECTION:
                 this._moveHorizontal(1, elem);
