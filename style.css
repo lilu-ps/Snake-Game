@@ -51,3 +51,10 @@
     color : white;
     /* border: 1px solid transparent; */
 }
+
+.score{
+    font-size: 0.8rem;
+    color: red;
+    position: absolute;
+    bottom: 0;
+}

@@ -13,12 +13,26 @@ function init(){
 
     snake.drawSnake();
     snake.drawFood();
+    createScore();
+}
+
+/*
+ * Creates a score div with default inner html of "score: 0".
+ * score will change when the snakes eats food.
+ */
+function createScore(){
+    let score = document.createElement('div');
+    score.setAttribute('id', 'score-id');
+    score.setAttribute('class', 'score');
+
+    score.style.backgroundColor= "white";
+    score.innerHTML = "SCORE: 0";
+    document.getElementById('canvas-id').append(score);
 }
 
 function play(){
     intervalId = setInterval(function(){
-        let res = moveSnakes();
-        if (res == -1)  {
+        if (moveSnakes() == -1)  {
             stop();
         }
 

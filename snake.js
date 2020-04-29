@@ -16,6 +16,7 @@ export class Snake{
         this.a = 5;
         this.prev = {x:0, y:0};
         this.food = {x:0, y:0};
+        this.score = 0;
     }
     
     /*
@@ -29,6 +30,9 @@ export class Snake{
         }
         let curPart = document.getElementById("food-id");
         curPart.parentNode.removeChild(curPart);
+
+        let score = document.getElementById('score-id');
+        score.parentNode.removeChild(score);
         this.defaultInit();
     }
     /*
@@ -128,6 +132,10 @@ export class Snake{
         this.snakeBody.push({x: this.snakeBody[length - 1].x, y: this.snakeBody[length - 1].y});
         this._createRect(length, this.snakeBody[length].x, this.snakeBody[length].y);
         this.snakeLength++;
+
+        this.score++;
+        let score = document.getElementById('score-id');
+        score.innerHTML = "SCORE: " + this.score;
     }
  
 
