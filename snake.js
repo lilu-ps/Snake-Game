@@ -2,6 +2,13 @@ import * as CONSTANTS from "./config.js";
 
 export class Snake{
     constructor() {
+        this.defaultInit();
+    }
+
+    /*
+     * Initialize everthing to default
+    */
+    defaultInit(){
         this.lastDirection = CONSTANTS.RIGHT_DIRECTION;
 
         this.snakeLength = CONSTANTS.SNAKE_DEFAULT_LENGTH;
@@ -10,7 +17,20 @@ export class Snake{
         this.prev = {x:0, y:0};
         this.food = {x:0, y:0};
     }
-
+    
+    /*
+     * Removes snakes current body and food from canvas.
+     * Also re-initializes everything to default.
+     */
+    clearEverything(){
+        for(var i = 0; i < this.snakeLength; i++){
+            let curPart = document.getElementById(i);
+            curPart.parentNode.removeChild(curPart);
+        }
+        let curPart = document.getElementById("food-id");
+        curPart.parentNode.removeChild(curPart);
+        this.defaultInit();
+    }
     /*
      * Returns snake length
      */
@@ -82,7 +102,7 @@ export class Snake{
         this.prev.x = this.snakeBody[index].x;
         this.prev.y = this.snakeBody[index].y;
         if (index == 0){
-           this._moveSnakeHead(elem);
+           if (this._moveSnakeHead(elem) == -1) return -1;
            if (this.snakeBody[index].x == this.food.x && this.snakeBody[index].y == this.food.y){
                 this._eatAndGrow()
            }
@@ -92,7 +112,7 @@ export class Snake{
         }
         elem.style.left = this.snakeBody[index].x * CONSTANTS.RECT_WIDTH + 'px';
         elem.style.top = this.snakeBody[index].y * CONSTANTS.RECT_WIDTH + 'px';
-        
+        return 0;
     }
 
     /*
@@ -117,18 +137,15 @@ export class Snake{
     _moveSnakeHead(elem){
         switch(this.lastDirection){
             case CONSTANTS.RIGHT_DIRECTION:
-                this._moveHorizontal(1, elem);
-                break;
+                return this._moveHorizontal(1, elem);
             case CONSTANTS.LEFT_DIRECTION:
-                this._moveHorizontal(-1, elem);
-                break;
+                return this._moveHorizontal(-1, elem);
             case CONSTANTS.DOWN_DIRECTION:
-                this._moveVertical(1, elem);
-                break;
+                return this._moveVertical(1, elem);
             case CONSTANTS.UP_DIRECTION:
-                this._moveVertical(-1, elem);
-                break;
+                return this._moveVertical(-1, elem);
         }
+        return 0;
     }
 
 
@@ -137,8 +154,12 @@ export class Snake{
      * left, if direction equals 1, then it moves right.
     */
     _moveHorizontal(direction, elem){
-        if (direction == 1 && elem.offsetLeft + CONSTANTS.RECT_WIDTH == CONSTANTS.CANVAS_WIDTH) return;
-        if (direction == -1 && elem.offsetLeft == 0) return;
+        if (direction == 1 && elem.offsetLeft + CONSTANTS.RECT_WIDTH == CONSTANTS.CANVAS_WIDTH) {
+            return -1;
+        }
+        if (direction == -1 && elem.offsetLeft == 0) {
+            return -1;
+        }
 
         this.snakeBody[0].x += direction;
     }
@@ -148,8 +169,12 @@ export class Snake{
      * up, if direction equals 1, then it moves down.
     */
     _moveVertical(direction, elem){
-        if (direction == 1 && elem.offsetTop + CONSTANTS.RECT_HEIGHT == CONSTANTS.CANVAS_HEIGHT) return;
-        if (direction == -1 && elem.offsetTop == 0) return;
+        if (direction == 1 && elem.offsetTop + CONSTANTS.RECT_HEIGHT == CONSTANTS.CANVAS_HEIGHT) {
+            return -1;
+        }
+        if (direction == -1 && elem.offsetTop == 0) {
+            return -1;
+        }
 
         //elem.style.top=elem.offsetTop + (direction * CONSTANTS.RECT_HEIGHT) + 'px';
         this.snakeBody[0].y += direction;

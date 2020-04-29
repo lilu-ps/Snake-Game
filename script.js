@@ -1,17 +1,27 @@
 import * as CONSTANTS from "./config.js";
 import { Snake } from "./snake.js";
-let snake ;
+let snake = new Snake();
+let intervalId;
 
-window.onload = init();
+window.onload = function(){
+    createButtons();
+    init();
+};  
 
 function init(){
-    snake = new Snake();
     snake.initSnakeBody();
 
     snake.drawSnake();
     snake.drawFood();
-    setInterval(function(){
-        moveSnakes();
+}
+
+function play(){
+    intervalId = setInterval(function(){
+        let res = moveSnakes();
+        if (res == -1)  {
+            stop();
+        }
+
      }, 100);
 }
 
@@ -26,7 +36,62 @@ function changeSnakeDirection(e){
 function moveSnakes(){
     let length = snake.getSnakeLength();
     for (var i = 0; i < length; i++){
-       snake.move(document.getElementById(i), i);
+       if (snake.move(document.getElementById(i), i) == -1){
+           return -1;
+       }
     }
+    return 0;
+}
+
+
+/*
+ * Creates three general buttons: play, pause and stop
+ */
+function createButtons(){
+    addButtton("PLAY");
+    addButtton("PAUSE");
+    addButtton("STOP");
+}
+
+/*
+ * General function for creating and adding new button.
+ * Adds listeners to the new button with a function suitable
+ * for buttons name.
+ */
+function addButtton(filterKey){
+    let butt = document.createElement("BUTTON");
+    butt.innerHTML = filterKey;
+    butt.setAttribute('class', 'game-button');
+
+    butt.style.marginRight = "6px";
+    butt.value = filterKey;
+    butt.setAttribute('id', filterKey);
+    butt.addEventListener("click",function(){
+        switch(filterKey){
+            case "PLAY":
+                play();
+                break;
+            case "PAUSE":
+                pause();
+                break;
+            case "STOP":
+                stop();
+                break;
+        }
+    }, false);
+    document.getElementById("button-list").append(butt);
+}
+
+// Puases the game
+function pause(){
+    clearInterval(intervalId);
+}
+/*
+ * Stops the game, clears entire canvas and re-initializes the snake
+ */
+function stop(){
+    pause();
+    snake.clearEverything();
+    init();
 }
 
