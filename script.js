@@ -30,6 +30,9 @@ function createScore(){
     document.getElementById('canvas-id').append(score);
 }
 
+/*
+ * This function is called when the play button is clicked
+ */
 function play(){
     intervalId = setInterval(function(){
         if (moveSnakes() == -1)  {
@@ -41,12 +44,20 @@ function play(){
 
 onkeydown = changeSnakeDirection;
 
+/*
+ * When the playes presses one of the arrow keys,
+ * this function will be called, which will change
+ * the snake direction accordingly.
+ */
 function changeSnakeDirection(e){
     var key_code=e.which||e.keyCode;
     snake.changeDirection(key_code);
 }
 
 
+/*
+ * This function moves every part of the snake body
+ */
 function moveSnakes(){
     let length = snake.getSnakeLength();
     for (var i = 0; i < length; i++){

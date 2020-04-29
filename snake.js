@@ -66,15 +66,39 @@ export class Snake{
 
     /*
      * This function chooses random coordinates for food and 
-     * then draws it on canvas.
+     * then draws it on canvas. checks if the food coordinates are the
+     * same as one of the body part of the snake. If so, the function chooses
+     * another random place for the food.
      */
     drawFood(){
-        this.food.x = Math.round(Math.random()*(CONSTANTS.CANVAS_WIDTH-CONSTANTS.RECT_WIDTH)/CONSTANTS.RECT_WIDTH);
-        this.food.y = Math.round(Math.random()*(CONSTANTS.CANVAS_HEIGHT-CONSTANTS.RECT_HEIGHT)/CONSTANTS.RECT_HEIGHT);
+        this._randomPosForFood();
+        while (this._checkFoodOnSnakeBody() == -1){
+            this._randomPosForFood();
+        }
 
         let foodRect = this._createRect('food-id', this.food.x, this.food.y);
         foodRect.style.backgroundColor = "red";
         foodRect.style.borderColor = "#DF868F";
+    }
+
+    /*
+     * Chooses random coordinates for the food
+     */
+    _randomPosForFood(){
+        this.food.x = Math.round(Math.random()*(CONSTANTS.CANVAS_WIDTH-CONSTANTS.RECT_WIDTH)/CONSTANTS.RECT_WIDTH);
+        this.food.y = Math.round(Math.random()*(CONSTANTS.CANVAS_HEIGHT-CONSTANTS.RECT_HEIGHT)/CONSTANTS.RECT_HEIGHT);
+    }
+
+    /*
+     * checks for food and body colision (While creating the food)
+     */
+    _checkFoodOnSnakeBody(){
+        for (var i = 0; i < this.snakeLength; i++){
+            if (this.food.x == this.snakeBody[i].x && this.food.y == this.snakeBody[i].y){
+                return -1;
+            }
+        }
+        return 0;
     }
     
     
