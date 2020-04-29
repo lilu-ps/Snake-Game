@@ -11,3 +11,11 @@ export const RIGHT_DIRECTION = 3;
 export const DOWN_DIRECTION = 4;
 export const CANVAS_WIDTH = 450;
 export const CANVAS_HEIGHT = 450;
+
+export const START_STRING = "Press PLAY to start!";
+export const PAUSE_STRING = "Press PLAY to continue the game!"
+export const STOP_STRING = "GAME OVER! Press PLAY  to start again!"
+
+export const PLAY_BUTTON = "PLAY";
+export const PAUSE_BUTTON = "PAUSE";
+export const STOP_BUTTON = "STOP";

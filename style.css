@@ -3,6 +3,7 @@
     padding: 0;
     box-sizing: border-box;
     background-color: green;
+    position: relative;
 }
 
 .container{
@@ -56,3 +57,11 @@
     position: absolute;
     bottom: 0;
 }
+
+.messages{
+    font-size: 1rem;
+    color : white;
+    position: absolute;
+    top: 550px;
+    left: 50%;
+    transform: translate(-50%, 100%);

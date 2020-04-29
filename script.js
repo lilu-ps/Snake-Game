@@ -2,18 +2,24 @@ import * as CONSTANTS from "./config.js";
 import { Snake } from "./snake.js";
 let snake = new Snake();
 let intervalId;
+let prevButton;
 
 window.onload = function(){
     createButtons();
-    init();
+    init(CONSTANTS.START_STRING);
 };  
 
-function init(){
+/*
+ * Initializes the entire game
+ */
+function init(messageStr){
     snake.initSnakeBody();
 
     snake.drawSnake();
     snake.drawFood();
     createScore();
+
+    document.getElementById('message-list').innerHTML = messageStr;
 }
 
 /*
@@ -34,6 +40,11 @@ function createScore(){
  * This function is called when the play button is clicked
  */
 function play(){
+    if (prevButton == CONSTANTS.PLAY_BUTTON) return;
+
+    document.getElementById('message-list').innerHTML = "";
+    prevButton = CONSTANTS.PLAY_BUTTON;
+
     intervalId = setInterval(function(){
         if (moveSnakes() == -1)  {
             stop();
@@ -109,14 +120,20 @@ function addButtton(filterKey){
 
 // Puases the game
 function pause(){
+    if (prevButton == CONSTANTS.PAUSE_BUTTON) return;
     clearInterval(intervalId);
+    document.getElementById('message-list').innerHTML = CONSTANTS.PAUSE_STRING;
+    prevButton = CONSTANTS.PAUSE_BUTTON;
 }
 /*
  * Stops the game, clears entire canvas and re-initializes the snake
  */
 function stop(){
+    if (prevButton == CONSTANTS.STOP_BUTTON) return;
+
     pause();
     snake.clearEverything();
-    init();
+    init(CONSTANTS.STOP_STRING);
+    prevButton = CONSTANTS.STOP_BUTTON;
 }
 
