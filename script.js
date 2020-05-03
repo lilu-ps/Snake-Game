@@ -14,10 +14,10 @@ window.onload = function(){
  */
 function init(messageStr){
     snake.initSnakeBody();
+    createScore();
 
     snake.drawSnake();
     snake.drawFood();
-    createScore();
 
     document.getElementById('message-list').innerHTML = messageStr;
 }
@@ -32,7 +32,7 @@ function createScore(){
     score.setAttribute('class', 'score');
 
     score.style.backgroundColor= "white";
-    score.innerHTML = "SCORE: 0";
+    score.innerHTML = "SCORE: " + snake.getScore();
     document.getElementById('canvas-id').append(score);
 }
 

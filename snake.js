@@ -16,7 +16,13 @@ export class Snake{
         this.a = 5;
         this.prev = {x:0, y:0};
         this.food = {x:0, y:0};
-        this.score = 0;
+        if (localStorage.getItem('score') == null){
+            localStorage.setItem('score', 0);
+        }
+    }
+
+    getScore(){
+        return parseInt(localStorage.score);
     }
     
     /*
@@ -33,6 +39,7 @@ export class Snake{
 
         let score = document.getElementById('score-id');
         score.parentNode.removeChild(score);
+        localStorage.setItem('score', 0);
         this.defaultInit();
     }
     /*
@@ -157,9 +164,11 @@ export class Snake{
         this._createRect(length, this.snakeBody[length].x, this.snakeBody[length].y);
         this.snakeLength++;
 
-        this.score++;
+        //this.score++;
+        let curScore = parseInt(localStorage.score) + 1;
+        localStorage.setItem('score', curScore);
         let score = document.getElementById('score-id');
-        score.innerHTML = "SCORE: " + this.score;
+        score.innerHTML = "SCORE: " + curScore;//this.score;
     }
  
 
